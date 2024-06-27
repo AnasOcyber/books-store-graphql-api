@@ -3,6 +3,9 @@
 /node_modules
 /build
 
+# Constants / Secrets
+*/**/constants
+
 # Logs
 logs
 *.log

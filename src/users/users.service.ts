@@ -28,10 +28,6 @@ export class UsersService {
 
   async create({ name, email, password }: CreateUserInput) {
     const user = this.usersRepository.create({ email, password, name });
-
-    const salt = await genSalt();
-    user.password = await hash(password, salt);
-
     return await this.usersRepository.save(user);
   }
 

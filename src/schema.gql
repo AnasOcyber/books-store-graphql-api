@@ -37,9 +37,8 @@ type Query {
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User
   updateUser(id: ID!, updateUserInput: UpdateUserInput!): User
-  deleteUser(id: ID!): User
+  deleteUser(id: ID!): Boolean!
   createAuthor(createAuthorInput: CreateAuthorInput!): Author
   updateAuthor(id: ID!, updateAuthorInput: UpdateAuthorInput!): Author
   deleteAuthor(id: ID!): Author
@@ -48,12 +47,6 @@ type Mutation {
   deleteBook(id: ID!): Book
   assignBookToAuthor(bookId: ID!, authorId: ID!): Book
   assignBookToUser(bookId: ID!, userId: ID!): Book
-}
-
-input CreateUserInput {
-  name: String
-  email: String!
-  password: String!
 }
 
 input UpdateUserInput {

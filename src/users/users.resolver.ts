@@ -1,20 +1,22 @@
-import { ParseIntPipe } from '@nestjs/common';
+import { ParseIntPipe, UseGuards } from '@nestjs/common';
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CreateUserInput } from './dto/create-user.input';
+import { GqlAuthGuard } from '../auth/auth.guard';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
-@Resolver()
+@Resolver(() => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query(() => [User], { nullable: true })
+  @UseGuards(GqlAuthGuard)
   getUsers(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Query(() => User, { nullable: true })
+  @UseGuards(GqlAuthGuard)
   getUser(
     @Args('id', { type: () => ID }, ParseIntPipe) id: number,
   ): Promise<User> {
@@ -22,13 +24,7 @@ export class UsersResolver {
   }
 
   @Mutation(() => User, { nullable: true })
-  createUser(
-    @Args('createUserInput') createUserInput: CreateUserInput,
-  ): Promise<User> {
-    return this.usersService.create(createUserInput);
-  }
-
-  @Mutation(() => User, { nullable: true })
+  @UseGuards(GqlAuthGuard)
   updateUser(
     @Args('id', { type: () => ID }, ParseIntPipe) id: number,
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
@@ -36,7 +32,8 @@ export class UsersResolver {
     return this.usersService.update(id, updateUserInput);
   }
 
-  @Mutation(() => User, { nullable: true })
+  @Mutation(() => Boolean)
+  @UseGuards(GqlAuthGuard)
   deleteUser(
     @Args('id', { type: () => ID }, ParseIntPipe) id: number,
   ): Promise<User> {
